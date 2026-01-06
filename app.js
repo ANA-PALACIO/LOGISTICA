@@ -1,5 +1,5 @@
 
-// 👉 PEGA AQUÍ TU LINK CSV DE GOOGLE SHEETS
+
 const API_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQqyxK5J8LVHzdAKQOmbOqwjExJFw-k4anUd7LmAviJ71RvI6WuzqF5sBgX_zaLzgie2KJVmtx9t6Um/pub?output=csv";
 
 let prendas = [];
@@ -21,6 +21,8 @@ fetch(API_URL)
     console.log("BD cargada:", prendas);
   })
   .catch(err => console.error("Error cargando BD", err));
+
+  
 
 // 2️⃣ Al escanear
 function onScanSuccess(text) {
@@ -61,3 +63,25 @@ scanner.start(
   { fps: 10, qrbox: 250 },
   onScanSuccess
 );
+
+
+
+
+function guardarRegistro(prenda) {
+  let registros = JSON.parse(localStorage.getItem("registros")) || [];
+
+  registros.push({
+    fecha_scan: new Date().toISOString(),
+    codigo: prenda.codigo,
+    categoria: prenda.categoria,
+    n_caja: prenda.n_caja,
+    donador: prenda.donador,
+    etapa: prenda.etapa
+  });
+
+  localStorage.setItem("registros", JSON.stringify(registros));
+
+  console.log("💾 Registro guardado:", prenda.codigo);
+}
+
+
