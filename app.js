@@ -24,77 +24,24 @@ fetch(API_URL)
 
   
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzIS3QcUcqgZC0bNm5uelWP8hs5X9t7PlMWs6145cQeHFVxwGanFGRN1bh1zLXWfl7-kg/exec";
-
-function enviarASheets(prenda) {
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify(prenda)
-  })
-  .then(() => {
-    console.log("☁️ Registro enviado a Google Sheets:", prenda.codigo);
-  })
-  .catch(err => {
-    console.error("❌ Error enviando a Sheets", err);
-  });
-}
-
-
 // 2️⃣ Al escanear
-// function onScanSuccess(text) {
-//   const codigoEscaneado = text
-//     .replace(/\*/g, "")
-//     .trim()
-//     .toUpperCase();
+function onScanSuccess(text) {
+  const codigoEscaneado = text
+    .replace(/\*/g, "")
+    .trim()
+    .toUpperCase();
 
-//   const prenda = prendas.find(p =>
-//     p.codigo.trim().toUpperCase() === codigoEscaneado
-//   );
+  const prenda = prendas.find(p =>
+    p.codigo.trim().toUpperCase() === codigoEscaneado
+  );
 
-//   const cont = document.getElementById("resultado");
-
-//   if (!prenda) {
-//     cont.style.display = "block";
-//     cont.innerHTML = "❌ Código no encontrado";
-//     return;
-//   }
-
-
-function onScanSuccess(code) {
-  const codigo = code.trim();
-
-  console.log("📥 Código escaneado:", codigo);
-
-  // Buscar prenda en la BD cargada
-  const prenda = prendas.find(p => p.codigo === codigo);
+  const cont = document.getElementById("resultado");
 
   if (!prenda) {
-    alert("❌ Código no encontrado");
+    cont.style.display = "block";
+    cont.innerHTML = "❌ Código no encontrado";
     return;
   }
-
-  // Validar duplicados
-  const registros = JSON.parse(localStorage.getItem("registros")) || [];
-  const yaExiste = registros.some(r => r.codigo === codigo);
-
-  if (yaExiste) {
-    alert("⚠️ Este código ya fue registrado");
-    return;
-  }
-
-  // Guardar registro
-  guardarRegistro(prenda);
-  enviarASheets(prenda);
-
-
-  // Mostrar confirmación
-  alert("✅ Registro guardado correctamente");
-
-  console.log("✅ Registro completo:", prenda);
-}
-
-
-
 
   cont.style.display = "block";
   cont.innerHTML = `
@@ -105,7 +52,7 @@ function onScanSuccess(code) {
     <b>🔄 Etapa:</b> ${prenda.etapa}<br>
     <b>📅 Fecha:</b> ${prenda.fecha}
   `;
-
+}
 
 
 // 3️⃣ Iniciar cámara
